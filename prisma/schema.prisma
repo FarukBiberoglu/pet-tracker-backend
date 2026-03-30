@@ -33,3 +33,9 @@ model Pet {
 
   activeForUsers User[] @relation("ActivePet")
 }
+
+model Breed {
+  id String @id @default(uuid())
+  name String
+  type String
+}
