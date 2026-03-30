@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsInt, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNumber, IsUUID } from 'class-validator';
 
 export class CreatePetDto {
   @IsString()
@@ -9,8 +9,8 @@ export class CreatePetDto {
   type: string;
 
   @IsOptional()
-  @IsString()
-  breed?: string;
+  @IsUUID()
+  breedId?: string;
 
   @IsOptional()
   @Type(() => Number)

@@ -14,9 +14,15 @@ export class PetService {
     return this.prisma.$transaction(async (tx: any) => {
       const pet = await tx.pet.create({
         data: {
-          ...dto,
+          name: dto.name,
+          type: dto.type,
+          age: dto.age,
+          weight: dto.weight,
+          photoUrl: dto.photoUrl,
+          ...(dto.breedId ? { breed: { connect: { id: dto.breedId } } } : {}),
           ownerId: userId,
         },
+        include: { breed: true },
       });
 
       await tx.user.update({
@@ -35,6 +41,7 @@ export class PetService {
       where: {
         ownerId: userId,
       },
+      include: { breed: true },
       orderBy: {
         createdAt: 'desc',
       },

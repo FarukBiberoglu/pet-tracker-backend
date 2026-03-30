@@ -20,7 +20,8 @@ model Pet {
   id        String   @id @default(uuid())
   name      String
   type      String
-  breed     String?
+  breedId   String?
+  breed     Breed?   @relation(fields: [breedId], references: [id])
   age       Int?
   weight    Float?
   photoUrl  String?
@@ -38,4 +39,6 @@ model Breed {
   id String @id @default(uuid())
   name String
   type String
+
+  pets Pet[]
 }
