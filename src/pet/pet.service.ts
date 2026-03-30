@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 
@@ -12,6 +12,16 @@ export class PetService {
 
   async create(userId: string, dto: CreatePetDto) {
     return this.prisma.$transaction(async (tx: any) => {
+      if (dto.breedId) {
+        const exists = await tx.breed.findUnique({
+          where: { id: dto.breedId },
+          select: { id: true },
+        });
+        if (!exists) {
+          throw new BadRequestException('Invalid breedId');
+        }
+      }
+
       const pet = await tx.pet.create({
         data: {
           name: dto.name,
@@ -19,7 +29,7 @@ export class PetService {
           age: dto.age,
           weight: dto.weight,
           photoUrl: dto.photoUrl,
-          ...(dto.breedId ? { breed: { connect: { id: dto.breedId } } } : {}),
+          ...(dto.breedId ? { breedId: dto.breedId } : {}),
           ownerId: userId,
         },
         include: { breed: true },
@@ -53,7 +63,7 @@ export class PetService {
       where: {
         id: userId,
       },
-      include: { activePet: true },
+      include: { activePet: { include: { breed: true } } },
     });
 
     return user?.activePet ?? null;

@@ -1,13 +1,24 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PetModule } from './pet/pet.module';
 import { BreedModule } from './breed/breed.module';
+import { ChatModule } from './chat/chat.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, PetModule, BreedModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    RedisModule,
+    PrismaModule,
+    AuthModule,
+    PetModule,
+    BreedModule,
+    ChatModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
