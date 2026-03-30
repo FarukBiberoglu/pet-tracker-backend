@@ -4,28 +4,51 @@ import { CreatePetDto } from './dto/create-pet.dto';
 
 @Injectable()
 export class PetService {
-    constructor(private readonly prisma : PrismaService){}
+  constructor(private readonly prismaService: PrismaService) {}
 
-    async create(userId: string, dto: CreatePetDto) {
-        return this.prisma.$transaction(async (tx: any) => {
-          
-          const pet = await tx.pet.create({
-            data: {
-              ...dto,
-              ownerId: userId,
-            },
-          });
-      
-          await tx.user.update({
-            where: { id: userId },
-            data: {
-              activePet: {
-                connect: { id: pet.id },
-              },
-            },
-          });
-      
-          return pet;
-        });
-      }
+  private get prisma(): any {
+    return this.prismaService;
+  }
+
+  async create(userId: string, dto: CreatePetDto) {
+    return this.prisma.$transaction(async (tx: any) => {
+      const pet = await tx.pet.create({
+        data: {
+          ...dto,
+          ownerId: userId,
+        },
+      });
+
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          activePet: { connect: { id: pet.id } },
+        },
+      });
+
+      return pet;
+    });
+  }
+
+  async findAll(userId: string) {
+    return this.prisma.pet.findMany({
+      where: {
+        ownerId: userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async getActivePet(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: { activePet: true },
+    });
+
+    return user?.activePet ?? null;
+  }
 }
