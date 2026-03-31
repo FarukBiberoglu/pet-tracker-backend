@@ -62,3 +62,5 @@ model ChatMessage {
 
   session   ChatSession @relation(fields: [sessionId], references: [id])
 }
+
+
