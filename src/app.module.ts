@@ -8,6 +8,7 @@ import { PetModule } from './pet/pet.module';
 import { BreedModule } from './breed/breed.module';
 import { ChatModule } from './chat/chat.module';
 import { RedisModule } from './redis/redis.module';
+import { MedicationModule } from './medication/medication.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RedisModule } from './redis/redis.module';
     PetModule,
     BreedModule,
     ChatModule,
+    MedicationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

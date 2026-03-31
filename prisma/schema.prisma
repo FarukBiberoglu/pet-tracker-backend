@@ -33,6 +33,7 @@ model Pet {
   updatedAt DateTime @updatedAt      
 
   activeForUsers User[] @relation("ActivePet")
+  medications   Medication[]
 }
 
 model Breed {
@@ -63,4 +64,42 @@ model ChatMessage {
   session   ChatSession @relation(fields: [sessionId], references: [id])
 }
 
+model Medication {
+  id        String   @id @default(uuid())
+  name      String
+
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+
+  dosageAmount Float?
+  dosageUnit   DosageUnit? 
+
+  frequency String
+
+  startDate DateTime @default(now())
+  endDate   DateTime?
+
+  notes     String?
+
+  createdAt DateTime @default(now())
+
+  times MedicationTime[]
+}
+ model MedicationTime {
+  id String @id @default(uuid())
+  medicationId  String
+  medication    Medication @relation(fields: [medicationId], references: [id])
+  time          String
+  createdAt     DateTime @default(now())
+ }
+
+
+enum DosageUnit {
+  TABLET
+  ML
+  CAPSULE
+  DROP
+  INJECTION
+  OTHER
+}
 
