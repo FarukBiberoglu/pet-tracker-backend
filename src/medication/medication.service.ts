@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreateMedicationDto } from './dto/create-medication.dto';
+import { CreateMedicationDto, FrequencyEnum } from './dto/create-medication.dto';
 import { UpdateMedicationDto } from './dto/update-medication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -7,6 +7,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class MedicationService {
   
   constructor (private prisma : PrismaService){}
+
+  private resolveFrequency(
+    frequency: FrequencyEnum,
+    frequencyCustom?: string,
+  ): string {
+    if (frequency === FrequencyEnum.OTHER) {
+      return frequencyCustom?.trim() ?? '';
+    }
+    return frequency;
+  }
 
   async create(userId: string, dto: CreateMedicationDto) {
     return this.prisma.$transaction(async (tx) => {
@@ -26,7 +36,7 @@ export class MedicationService {
         data: {
           name: dto.name,
           petId: dto.petId,
-          frequency: dto.frequency,
+          frequency: this.resolveFrequency(dto.frequency, dto.frequencyCustom),
           dosageAmount: dto.dosageAmount,
           dosageUnit: dto.dosageUnit,
           notes: dto.notes,
@@ -72,7 +82,9 @@ export class MedicationService {
         where: { id: medicationId },
         data: {
           ...(dto.name && { name: dto.name }),
-          ...(dto.frequency && { frequency: dto.frequency }),
+          ...(dto.frequency && {
+            frequency: this.resolveFrequency(dto.frequency, dto.frequencyCustom),
+          }),
           ...(dto.dosageAmount !== undefined && {
             dosageAmount: dto.dosageAmount,
           }),

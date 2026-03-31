@@ -4,8 +4,10 @@ import {
   IsArray,
   IsNumber,
   IsEnum,
+  IsNotEmpty,
+  ValidateIf,
 } from 'class-validator';
-import { DosageUnit } from '@prisma/client';
+import { DosageUnitEnum, FrequencyEnum } from './create-medication.dto';
 
 export class UpdateMedicationDto {
   @IsOptional()
@@ -13,8 +15,13 @@ export class UpdateMedicationDto {
   name?: string;
 
   @IsOptional()
+  @IsEnum(FrequencyEnum)
+  frequency?: FrequencyEnum;
+
+  @ValidateIf((o: UpdateMedicationDto) => o.frequency === FrequencyEnum.OTHER)
   @IsString()
-  frequency?: string;
+  @IsNotEmpty()
+  frequencyCustom?: string;
 
   @IsOptional()
   @IsArray()
@@ -25,8 +32,8 @@ export class UpdateMedicationDto {
   dosageAmount?: number;
 
   @IsOptional()
-  @IsEnum(DosageUnit)
-  dosageUnit?: DosageUnit;
+  @IsEnum(DosageUnitEnum)
+  dosageUnit?: DosageUnitEnum;
 
   @IsOptional()
   @IsString()

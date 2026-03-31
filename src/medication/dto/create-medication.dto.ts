@@ -4,14 +4,25 @@ import {
   IsArray,
   IsNumber,
   IsEnum,
+  IsNotEmpty,
+  ValidateIf,
 } from 'class-validator';
 
-enum DosageUnitEnum {
+export enum DosageUnitEnum {
   TABLET = 'TABLET',
   ML = 'ML',
   CAPSULE = 'CAPSULE',
   DROP = 'DROP',
   INJECTION = 'INJECTION',
+  OTHER = 'OTHER',
+}
+
+export enum FrequencyEnum {
+  ONCE_DAILY = 'ONCE_DAILY',
+  TWICE_DAILY = 'TWICE_DAILY',
+  EVERY_8_HOURS = 'EVERY_8_HOURS',
+  WEEKLY = 'WEEKLY',
+  AS_NEEDED = 'AS_NEEDED',
   OTHER = 'OTHER',
 }
 
@@ -25,8 +36,13 @@ export class CreateMedicationDto {
   @IsArray()
   times: string[];
 
+  @IsEnum(FrequencyEnum)
+  frequency: FrequencyEnum;
+
+  @ValidateIf((o: CreateMedicationDto) => o.frequency === FrequencyEnum.OTHER)
   @IsString()
-  frequency: string;
+  @IsNotEmpty()
+  frequencyCustom?: string;
 
   @IsOptional()
   @IsNumber()

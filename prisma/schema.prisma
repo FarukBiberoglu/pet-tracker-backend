@@ -34,6 +34,7 @@ model Pet {
 
   activeForUsers User[] @relation("ActivePet")
   medications   Medication[]
+  appointments  Appointment[]
 }
 
 model Breed {
@@ -93,6 +94,24 @@ model Medication {
   createdAt     DateTime @default(now())
  }
 
+
+model Appointment {
+  id       String            @id @default(uuid())
+  title    String
+  clinic   String?
+  dateTime DateTime
+  status   AppointmentStatus @default(UPCOMING)
+
+  petId String
+  pet   Pet @relation(fields: [petId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+    
+ enum AppointmentStatus {
+  UPCOMING
+  COMPLETED
+}
 
 enum DosageUnit {
   TABLET
