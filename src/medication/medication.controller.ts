@@ -7,39 +7,41 @@ import { JwtAuthGuard } from 'src/auth/guard/auh-guardt';
 
 @Controller('medication')
 export class MedicationController {
-  constructor(private readonly medicationService: MedicationService) {}
+  constructor(private readonly medicationService: MedicationService) { }
 
-    @UseGuards(JwtAuthGuard)
-   @Post()
-    create(
-  @CurrentUser() user: { userId: string },
-  @Body() dto: CreateMedicationDto,
-) {
-  return this.medicationService.create(user.userId, dto);
-}
-@UseGuards(JwtAuthGuard)
-@Patch(':id')
-update(
-  @CurrentUser() user: { userId: string },
-  @Param('id') id: string,
-  @Body() dto: UpdateMedicationDto,
-) {
-  return this.medicationService.update(user.userId, id, dto);
-}@UseGuards(JwtAuthGuard)
-@Delete(':id')
-delete(
-  @CurrentUser() user: { userId: string },
-  @Param('id') id: string,
-) {
-  return this.medicationService.delete(user.userId, id);
-}
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(
+    @CurrentUser() user: { userId: string },
+    @Body() dto: CreateMedicationDto,
+  ) {
+    return this.medicationService.create(user.userId, dto);
+  }
 
-@UseGuards(JwtAuthGuard)
-@Get()
-findAll(
-  @CurrentUser() user: { userId: string },
-  @Query('petId') petId?: string,
-) {
-  return this.medicationService.findAll(user.userId, petId);
-}
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  update(
+    @CurrentUser() user: { userId: string },
+    @Param('id') id: string,
+    @Body() dto: UpdateMedicationDto,
+  ) {
+    return this.medicationService.update(user.userId, id, dto);
+  } 
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  delete(
+    @CurrentUser() user: { userId: string },
+    @Param('id') id: string,
+  ) {
+    return this.medicationService.delete(user.userId, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  findAll(
+    @CurrentUser() user: { userId: string },
+    @Query('petId') petId?: string,
+  ) {
+    return this.medicationService.findAll(user.userId, petId);
+  }
 }

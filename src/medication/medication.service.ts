@@ -109,7 +109,6 @@ export class MedicationService {
   }
   async delete(userId: string, medicationId: string) {
     return this.prisma.$transaction(async (tx) => {
-  
       const medication = await tx.medication.findUnique({
         where: { id: medicationId },
         include: {

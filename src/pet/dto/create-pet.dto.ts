@@ -25,4 +25,6 @@ export class CreatePetDto {
   @IsOptional()
   @IsString()
   photoUrl?: string;
+
+
 }

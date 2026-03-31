@@ -10,6 +10,7 @@ import { ChatModule } from './chat/chat.module';
 import { RedisModule } from './redis/redis.module';
 import { MedicationModule } from './medication/medication.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AppointmentModule } from './appointment/appointment.module';
     ChatModule,
     MedicationModule,
     AppointmentModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
